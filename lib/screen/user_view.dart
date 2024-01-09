@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:chimchimmobileapp/model/post_model.dart';
+import 'package:chimchimmobileapp/model/user_model.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class MyUserPage extends StatefulWidget {
+  const MyUserPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyUserPage> createState() => _MyUserPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  late Future<List<Post>> posts;
+class _MyUserPageState extends State<MyUserPage> {
+  late Future<List<User>> posts;
 
   @override
   void initState() {
@@ -27,7 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: FutureBuilder<List<Post>>(
+      body: FutureBuilder<List<User>>(
         future: posts,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -41,8 +41,8 @@ class _MyHomePageState extends State<MyHomePage> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(snapshot.data![index].title),
-                  subtitle: Text(snapshot.data![index].body),
+                  title: Text(snapshot.data![index].name),
+                  subtitle: Text(snapshot.data![index].email),
                 );
               },
             );
@@ -53,12 +53,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-Future<List<Post>> fetchPosts() async {
-  final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
+Future<List<User>> fetchPosts() async {
+  final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/users'));
 
   if (response.statusCode == 200) {
     List jsonResponse = json.decode(response.body);
-    return jsonResponse.map((data) => Post.fromJson(data)).toList();
+    return jsonResponse.map((data) => User.fromJson(data)).toList();
   } else {
     throw Exception('Failed to load posts');
   }

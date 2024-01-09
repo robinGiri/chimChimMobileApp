@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:chimchimmobileapp/screen/home_view.dart';
+import 'package:chimchimmobileapp/screen/user_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,7 @@ class _MyAppState extends State<MyApp> {
   static const List<Widget> _pages = <Widget>[
     MyHomePage(title: 'Home'),
     Text('Search Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
-    Text('Add Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+    MyUserPage(title: 'Add Page'),
     Text('Notifications Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
     Text('Messages Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
   ];
