@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:chimchimmobileapp/model/user_model.dart';
+import 'package:chimchimmobileapp/widget/tweet_card.dart';
 
 class MyUserPage extends StatefulWidget {
   const MyUserPage({super.key, required this.title});
@@ -40,9 +41,9 @@ class _MyUserPageState extends State<MyUserPage> {
             return ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(snapshot.data![index].name),
-                  subtitle: Text(snapshot.data![index].email),
+                User user = snapshot.data![index];
+                return TweetCard(
+                  user: user, // Pass your User data to the TweetCard
                 );
               },
             );
