@@ -1,78 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:chimchimmobileapp/screen/home_view.dart';
-import 'package:chimchimmobileapp/screen/user_view.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:twitter_clone/common/common.dart';
+import 'package:twitter_clone/features/auth/controller/auth_controller.dart';
+import 'package:twitter_clone/features/auth/view/signup_view.dart';
+import 'package:twitter_clone/features/home/view/home_view.dart';
+import 'package:twitter_clone/theme/theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  int _selectedIndex = 0;
-
-  static const List<Widget> _pages = <Widget>[
-    MyHomePage(title: 'Home'),
-    Text('Search Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
-    MyUserPage(title: 'Add Page'),
-    Text('Notifications Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
-    Text('Messages Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
-  ];
-
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      title: 'Chim Chim',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
-      home: Scaffold(
-        body: Center(
-          child: _pages.elementAt(_selectedIndex),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+      title: 'Twitter Clone',
+      theme: AppTheme.theme,
+      home: ref.watch(currentUserAccountProvider).when(
+            data: (user) {
+              if (user != null) {
+                return const HomeView();
+              }
+              return const SignUpView();
+            },
+            error: (error, st) => ErrorPage(
+              error: error.toString(),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'Search',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add),
-              label: 'Add',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.notifications),
-              label: 'Notifications',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.message),
-              label: 'Messages',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
-          unselectedItemColor: Colors.black,
-          onTap: _onItemTapped,
-        ),
-
-      ),
+            loading: () => const LoadingPage(),
+          ),
     );
   }
 }
